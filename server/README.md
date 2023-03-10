@@ -5,7 +5,8 @@
 ### Prepare
 
 ```bash
-pip3 install requests pillow flask gunicorn pytz pycairo
+python -m venv --system-site-package venv
+pip install requests pillow flask gunicorn pytz pycairo
 cp fonts/* /usr/share/fonts/
 fc-cache
 ```
