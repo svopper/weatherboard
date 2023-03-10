@@ -52,18 +52,23 @@ class ImageComposer7:
             context.fill()
             # Draw features
             self.draw_date(context)
+            self.draw_uvi(context)
             self.draw_temps(context)
             self.draw_column(context, self.weather.hourly_summary(0), 120, 30)
-            self.draw_column(context, self.weather.hourly_summary(2 * 3600), 120, 155)
-            self.draw_column(context, self.weather.hourly_summary(5 * 3600), 120, 280)
-            self.draw_column(context, self.weather.daily_summary(1), 120, 440)
+            self.draw_column(context, self.weather.hourly_summary(3 * 3600), 120, 155)
+            self.draw_column(context, self.weather.hourly_summary(6 * 3600), 120, 280)
+            self.draw_column(context, self.weather.hourly_summary(9 * 3600), 120, 405)
+            self.draw_vertical_bar(context, 520, 120, 250)
+            self.draw_column(context, self.weather.daily_summary(1), 120, 530)
+            self.draw_column(context, self.weather.daily_summary(2), 120, 655)
             self.draw_meteogram(context)
-            self.draw_alerts(context)
+            # self.draw_alerts(context)
             self.draw_stats(context)
             # Save out as bytestream
             output = BytesIO()
             surface.write_to_png(output)
             return output
+
 
     def draw_date(self, context: cairo.Context):
         now = datetime.datetime.now(self.timezone)
@@ -86,21 +91,41 @@ class ImageComposer7:
             weight="bold",
         )
 
+    def draw_uvi(self, context: cairo.Content):
+        max_uvi = self.weather.uvi_max_24hr()
+
+        # self.draw_icon(context, "clear-day", (300, 5), scaleFactor=0.5)
+        self.draw_text(
+            context,
+            position=(250, 35),
+            text=f"UV: {max_uvi}",
+            color=BLACK,
+            size=30,
+        )
+
+        current_uvi = self.weather.uvi_now()
+        self.draw_text(
+            context,
+            position=(250, 65),
+            text=f"UV: {current_uvi}",
+            color=BLACK,
+            size=30
+        )
+
     def draw_temps(self, context: cairo.Context):
         # Draw on temperature ranges
         temp_min, temp_max = self.weather.temp_range_24hr()
-        c_to_f = lambda c: (c * (9 / 5)) + 32
         # Draw background rects
-        self.draw_roundrect(context, 335, 5, 85, 90, 5)
+        self.draw_roundrect(context, 535, 5, 85, 90, 5)
         context.set_source_rgb(*BLUE)
         context.fill()
-        self.draw_roundrect(context, 510, 5, 85, 90, 5)
+        self.draw_roundrect(context, 710, 5, 85, 90, 5)
         context.set_source_rgb(*RED)
         context.fill()
         self.draw_text(
             context,
-            position=(377, 55),
-            text=round(temp_min),
+            position=(577, 55),
+            text=f"{round(temp_min)}°",
             color=WHITE,
             weight="bold",
             size=50,
@@ -108,7 +133,7 @@ class ImageComposer7:
         )
         self.draw_text(
             context,
-            position=(377, 82),
+            position=(577, 82),
             text="Min.",
             color=WHITE,
             size=23,
@@ -116,8 +141,8 @@ class ImageComposer7:
         )
         self.draw_text(
             context,
-            position=(465, 55),
-            text=round(self.weather.temp_current()),
+            position=(665, 55),
+            text=f"{round(self.weather.temp_current())}°",
             color=BLACK,
             weight="bold",
             size=50,
@@ -125,7 +150,7 @@ class ImageComposer7:
         )
         self.draw_text(
             context,
-            position=(465, 82),
+            position=(665, 82),
             text="Nu",
             color=BLACK,
             size=23,
@@ -133,8 +158,8 @@ class ImageComposer7:
         )
         self.draw_text(
             context,
-            position=(553, 55),
-            text=round(temp_max),
+            position=(753, 55),
+            text=f"{round(temp_max)}°",
             color=WHITE,
             weight="bold",
             size=50,
@@ -142,7 +167,7 @@ class ImageComposer7:
         )
         self.draw_text(
             context,
-            position=(553, 82),
+            position=(753, 82),
             text="Max.",
             color=WHITE,
             size=23,
@@ -152,7 +177,7 @@ class ImageComposer7:
     def draw_meteogram(self, context: cairo.Context):
         top = 310
         left = 10
-        width = 425
+        width = 625
         height = 85
         left_axis = 18
         hours = 24
@@ -255,8 +280,10 @@ class ImageComposer7:
             if hour < hours:
                 color = BLACK
                 if conditions["uv"]:
+                    print(conditions["uv"])
                     color = ORANGE
                 if conditions["uv"] > 7:
+                    print(conditions["uv"])
                     color = RED
                 context.rectangle(x, bar_top, (graph_width / hours) + 1, 8)
                 context.set_source_rgb(*color)
@@ -270,7 +297,7 @@ class ImageComposer7:
             )
         else:
             time_text = (
-                conditions["time"].astimezone(self.timezone).strftime("%-H").lower()
+                conditions["time"].astimezone(self.timezone).strftime("%H").lower()
             )
         self.draw_text(
             context,
@@ -281,6 +308,23 @@ class ImageComposer7:
             align="center",
         )
         self.draw_icon(context, conditions["icon"], (left, top + 33))
+
+        if "temperature" in conditions:
+            self.draw_text(
+                context,
+                text=f"{round(conditions['temperature'])}°",
+                position=(left + 50, top + 150),
+                color=BLACK,
+                size=28,
+                align="center",
+            )
+
+    def draw_vertical_bar(self, context: cairo.Context, x, y1, y2):
+        context.set_line_width(2)
+        context.set_source_rgb(*GREY)
+        context.move_to(x, y1)
+        context.line_to(x, y2)
+        context.stroke()
 
     def draw_alerts(self, context: cairo.Context):
         # Load weather alerts
@@ -340,35 +384,30 @@ class ImageComposer7:
 
     def draw_stats(self, context: cairo.Context):
         # Draw sunrise, sunset, AQI icon and values
-        self.draw_icon(context, "rise-set-aqi", (450, 300))
+        self.draw_icon(context, "rise-set-aqi", (650, 300))
         self.draw_text(
             context,
-            position=(505, 337),
+            position=(705, 337),
             text=self.weather.sunrise().astimezone(self.timezone).strftime("%H:%M"),
             color=BLACK,
             size=32,
         )
         self.draw_text(
             context,
-            position=(505, 385),
+            position=(705, 385),
             text=self.weather.sunset().astimezone(self.timezone).strftime("%H:%M"),
             color=BLACK,
             size=32,
         )
         # Pick AQI text and color
-        aqi = self.weather.aqi()
-        if aqi < 50:
-            color = GREEN
-        elif aqi < 150:
-            color = ORANGE
-        else:
-            color = RED
+        # aqi = self.weather.aqi()
+        color = GREY
         text_width = self.draw_text(context, "N/A", size=30, weight="bold", noop=True)
-        self.draw_roundrect(context, 505, 402, text_width + 13, 36, 3)
+        self.draw_roundrect(context, 705, 402, text_width + 13, 36, 3)
         context.set_source_rgb(*color)
         context.fill()
         self.draw_text(
-            context, position=(510, 430), text="N/A", color=WHITE, size=30, weight="bold"
+            context, position=(710, 430), text="N/A", color=WHITE, size=30, weight="bold"
         )
 
     def draw_roundrect(self, context, x, y, width, height, r):
@@ -449,12 +488,13 @@ class ImageComposer7:
         context.set_source_rgb(*color)
         context.fill()
 
-    def draw_icon(self, context: cairo.Context, icon: str, position: Tuple[int, int]):
+    def draw_icon(self, context: cairo.Context, icon: str, position: Tuple[int, int], scaleFactor: float = 1):
         image = cairo.ImageSurface.create_from_png(
             os.path.join(os.path.dirname(__file__), "icons-7", f"{icon}.png")
         )
         context.save()
         context.translate(*position)
+        context.scale(scaleFactor, scaleFactor)
         context.set_source_surface(image)
         context.paint()
         context.restore()

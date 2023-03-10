@@ -19,26 +19,6 @@ class WeatherClient:
         ).json()
         self.current_time = self.data["current"]["dt"]
 
-    def aqi(self):
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36 Edg/92.0.902.67",
-        }
-        response = requests.post(
-            "https://airnowgovapi.com/reportingarea/get",
-            headers=headers,
-            data={
-                "latitude": "39.790",
-                "longitude": "-104.888",
-                "stateCode": "CO",
-                "maxDistance": "50",
-            },
-        )
-        pollutants = {}
-        for entry in response.json():
-            if "aqi" in entry:
-                pollutants[entry["parameter"]] = entry["aqi"]
-        aqi = max(pollutants.values())
-        return aqi
 
     def temp_current(self):
         return self.data["current"]["temp"]
@@ -50,6 +30,16 @@ class WeatherClient:
             if hour["dt"] - self.current_time < 86400
         ]
         return min(temps), max(temps)
+
+    def uvi_max_24hr(self):
+        return max(
+            hour["uvi"]
+            for hour in self.data["hourly"]
+            if hour["dt"] - self.current_time < 86400
+        )
+
+    def uvi_now(self):
+        return self.data["current"]["uvi"]
 
     def humidity_current(self):
         return self.data["current"]["humidity"]
@@ -117,6 +107,7 @@ class WeatherClient:
             )
         return result
 
+    # https://openweathermap.org/weather-conditions
     def code_to_icon(self, code, night=False):
         if code == 511:
             return "sleet"
