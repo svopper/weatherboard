@@ -37,15 +37,17 @@ class ImageComposer7:
         self.lat = lat
         self.long = long
         self.timezone = pytz.timezone(timezone)
+        self.width = 800
+        self.height = 480
 
     def render(self):
         # Fetch weather
         self.weather = WeatherClient(self.lat, self.long, self.timezone)
         self.weather.load(self.api_key)
         # Create image
-        with cairo.ImageSurface(cairo.FORMAT_ARGB32, 600, 448) as surface:
+        with cairo.ImageSurface(cairo.FORMAT_ARGB32, self.width, self.height) as surface:
             context = cairo.Context(surface)
-            context.rectangle(0, 0, 600, 448)
+            context.rectangle(0, 0, self.width, self.height)
             context.set_source_rgb(1, 1, 1)
             context.fill()
             # Draw features
@@ -77,35 +79,7 @@ class ImageComposer7:
         # Day number
         left += self.draw_text(
             context,
-            text=now.strftime("%d").lstrip("0"),
-            position=(left, 90),
-            size=30,
-            color=BLACK,
-            weight="bold",
-        )
-        th = {
-            "01": "st",
-            "02": "nd",
-            "03": "rd",
-            "21": "st",
-            "22": "nd",
-            "23": "rd",
-            "31": "st",
-        }.get(now.strftime("%d"), "th")
-        left += 1
-        left += self.draw_text(
-            context,
-            text=th,
-            position=(left, 75),
-            size=15,
-            color=BLACK,
-            weight="bold",
-        )
-        # Month name (short)
-        left += 5
-        left += self.draw_text(
-            context,
-            text=now.strftime("%B"),
+            text=now.strftime("%-d. %B").lower(),
             position=(left, 90),
             size=30,
             color=BLACK,
@@ -135,7 +109,7 @@ class ImageComposer7:
         self.draw_text(
             context,
             position=(377, 82),
-            text=round(c_to_f(temp_min)),
+            text="Min.",
             color=WHITE,
             size=23,
             align="center",
@@ -152,7 +126,7 @@ class ImageComposer7:
         self.draw_text(
             context,
             position=(465, 82),
-            text=round(c_to_f(self.weather.temp_current())),
+            text="Nu",
             color=BLACK,
             size=23,
             align="center",
@@ -169,7 +143,7 @@ class ImageComposer7:
         self.draw_text(
             context,
             position=(553, 82),
-            text=round(c_to_f(temp_max)),
+            text="Max.",
             color=WHITE,
             size=23,
             align="center",
@@ -296,7 +270,7 @@ class ImageComposer7:
             )
         else:
             time_text = (
-                conditions["time"].astimezone(self.timezone).strftime("%-I%p").lower()
+                conditions["time"].astimezone(self.timezone).strftime("%-H").lower()
             )
         self.draw_text(
             context,
@@ -321,14 +295,14 @@ class ImageComposer7:
                     {
                         "text": holiday_name,
                         "subtext": (
-                            "in %i days" % days_until if days_until != 1 else "tomorrow"
+                            "om %i dage" % days_until if days_until != 1 else "i morgen"
                         ),
                         "color": BLUE,
                     }
                 )
         # Add no alert pill if there weren't any
         if not alerts:
-            alerts = [{"text": "No Alerts", "color": BLACK}]
+            alerts = [{"text": "Ingen advarsler", "color": BLACK}]
         top = 265
         left = 5
         for alert in alerts:
@@ -389,12 +363,12 @@ class ImageComposer7:
             color = ORANGE
         else:
             color = RED
-        text_width = self.draw_text(context, aqi, size=30, weight="bold", noop=True)
+        text_width = self.draw_text(context, "N/A", size=30, weight="bold", noop=True)
         self.draw_roundrect(context, 505, 402, text_width + 13, 36, 3)
         context.set_source_rgb(*color)
         context.fill()
         self.draw_text(
-            context, position=(510, 430), text=aqi, color=WHITE, size=30, weight="bold"
+            context, position=(510, 430), text="N/A", color=WHITE, size=30, weight="bold"
         )
 
     def draw_roundrect(self, context, x, y, width, height, r):

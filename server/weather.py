@@ -73,7 +73,7 @@ class WeatherClient:
         data = d1
         # Format a summary
         dt = datetime.utcfromtimestamp(data["dt"]).replace(tzinfo=pytz.utc)
-        hour = dt.astimezone(self.timezone).strftime("%H").lstrip("0")
+        hour = dt.astimezone(self.timezone).strftime("%H")
         if hour == "":
             hour = "0"
         return {
@@ -83,7 +83,7 @@ class WeatherClient:
             "icon": self.code_to_icon(data["weather"][0]["id"], data["uvi"] == 0),
             "description": data["weather"][0]["main"].title(),
             "temperature": data["temp"],
-            "wind": data["wind_speed"] * 2.2,
+            "wind": data["wind_speed"], # in m/s
             "rain": data.get("rain", {}).get("1h", 0),
             "snow": data.get("snow", {}).get("1h", 0),
             "clouds": data["clouds"],
@@ -98,7 +98,7 @@ class WeatherClient:
             "icon": self.code_to_icon(data["weather"][0]["id"]),
             "description": data["weather"][0]["main"].title(),
             "temperature_range": (data["temp"]["min"], data["temp"]["max"]),
-            "wind": data["wind_speed"] * 2.2,
+            "wind": data["wind_speed"],
         }
 
     def active_alerts(self):
