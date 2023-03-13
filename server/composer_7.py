@@ -10,14 +10,6 @@ import cairo
 from weather import WeatherClient
 from holidays import holidays
 
-# BLACK = 0
-# WHITE = 1
-# GREEN = 2
-# BLUE = 3
-# RED = 4
-# YELLOW = 5
-# ORANGE = 6
-# PALETTE = [0,0,0,255,255,255,0,200,0,0,0,200,200,0,0,230,230,0,200,100,0]
 BLACK = (0, 0, 0)
 WHITE = (1, 1, 1)
 GREEN = (0, 1, 0)
@@ -92,14 +84,12 @@ class ImageComposer7:
         )
 
     def draw_uvi(self, context: cairo.Content):
+        left = 500
         max_uvi = self.weather.uvi_max_24hr()
-
-        # round to 1 decimal
-        max_uvi = round(max_uvi * 10) / 10
 
         self.draw_text(
             context,
-            position=(525, 35),
+            position=(left, 35),
             text=f"UV max: {round(max_uvi * 10) / 10}",
             color=BLACK,
             size=30,
@@ -109,7 +99,7 @@ class ImageComposer7:
         current_uvi = self.weather.uvi_now()
         self.draw_text(
             context,
-            position=(525, 65),
+            position=(left, 65),
             text=f"UV nu: {round(current_uvi * 10) / 10}",
             color=BLACK,
             size=30,
@@ -234,23 +224,31 @@ class ImageComposer7:
             context, points=snow_points, bottom=int(precip_to_y(0)), color=PURPLE
         )
 
-        # Add agenda below the chart if there is rain or snow
-        cursor = 0
+        # Add agenda below the chart if there is rain or snow. Agenda is colored dots with text on the right
+        left_cursor = left + left_axis
         if len(rain_points) > 0:
-            cursor = self.draw_text(
+            left_cursor += self.draw_circle(context, left_cursor, top + 150, 6)
+            context.set_source_rgb(*BLUE)
+            context.fill()
+            left_cursor += self.draw_text(
                 context,
-                position=(left + left_axis, top + 155),
+                position=(left_cursor, top + 157),
                 text="Regn",
-                color=BLUE,
+                color=BLACK,
                 size=20,
             )
 
+        left_cursor += 40
+
         if len(snow_points) > 0:
-            self.draw_text(
+            left_cursor += self.draw_circle(context, left_cursor, top + 150, 6)
+            context.set_source_rgb(*PURPLE)
+            context.fill()
+            left_cursor += self.draw_text(
                 context,
-                position=(left + left_axis + cursor + 10, top + 155),
+                position=(left_cursor, top + 157),
                 text="Sne",
-                color=PURPLE,
+                color=BLACK,
                 size=20,
             )
 
@@ -459,6 +457,11 @@ class ImageComposer7:
         context.arc(x + width - r, y + height - r, r, 0, math.pi / 2)
         context.arc(x + r, y + height - r, r, math.pi / 2, math.pi)
         context.close_path()
+
+    def draw_circle(self, context, x, y, r) -> int:
+        context.arc(x, y, r, 0, 2 * math.pi)
+        context.close_path()
+        return r*2 # return diameter
 
     def draw_text(
         self,

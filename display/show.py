@@ -8,7 +8,7 @@ import requests
 from PIL import Image
 from waveshare_epd import epd5in83bc
 
-IMAGE_SIZE = (600, 448)
+IMAGE_SIZE = (800, 480)
 
 
 def show_image(image):
