@@ -94,22 +94,26 @@ class ImageComposer7:
     def draw_uvi(self, context: cairo.Content):
         max_uvi = self.weather.uvi_max_24hr()
 
-        # self.draw_icon(context, "clear-day", (300, 5), scaleFactor=0.5)
+        # round to 1 decimal
+        max_uvi = round(max_uvi * 10) / 10
+
         self.draw_text(
             context,
-            position=(250, 35),
-            text=f"UV: {max_uvi}",
+            position=(525, 35),
+            text=f"UV max: {round(max_uvi * 10) / 10}",
             color=BLACK,
             size=30,
+            align="right"
         )
 
         current_uvi = self.weather.uvi_now()
         self.draw_text(
             context,
-            position=(250, 65),
-            text=f"UV: {current_uvi}",
+            position=(525, 65),
+            text=f"UV nu: {round(current_uvi * 10) / 10}",
             color=BLACK,
-            size=30
+            size=30,
+            align="right"
         )
 
     def draw_temps(self, context: cairo.Context):
@@ -183,8 +187,10 @@ class ImageComposer7:
         hours = 24
         y_interval = 10
         graph_width = width - left_axis
+
         # Establish function that converts hour offset into X
         hour_to_x = lambda hour: left + left_axis + (hour * (graph_width / hours))
+
         # Draw day boundary lines
         today = self.weather.hourly_summary(0)["day"]
         for hour in range(hours):
@@ -199,6 +205,7 @@ class ImageComposer7:
                 context.stroke()
                 context.restore()
                 today = day
+
         # Establish temperature-to-y function
         temps = [
             self.weather.hourly_summary(hour * 3600)["temperature"]
@@ -211,6 +218,7 @@ class ImageComposer7:
         temp_to_y = lambda temp: top + (scale_max - temp) * (
             height / (scale_max - scale_min)
         )
+
         # Draw rain/snow curves
         precip_to_y = lambda rain: top + 1 + (max(4 - rain, 0) * (height / 4))
         rain_points = []
@@ -225,6 +233,28 @@ class ImageComposer7:
         self.draw_precip_curve(
             context, points=snow_points, bottom=int(precip_to_y(0)), color=PURPLE
         )
+
+        # Add agenda below the chart if there is rain or snow
+        cursor = 0
+        if len(rain_points) > 0:
+            cursor = self.draw_text(
+                context,
+                position=(left + left_axis, top + 155),
+                text="Regn",
+                color=BLUE,
+                size=20,
+            )
+
+        if len(snow_points) > 0:
+            self.draw_text(
+                context,
+                position=(left + left_axis + cursor + 10, top + 155),
+                text="Sne",
+                color=PURPLE,
+                size=20,
+            )
+
+
         # Draw value lines
         for t in range(scale_min, scale_max + 1, y_interval):
             y = temp_to_y(t)
@@ -245,6 +275,7 @@ class ImageComposer7:
                 align="right",
                 valign="middle",
             )
+
         # Draw temperature curve
         for hour in range(hours + 1):
             conditions = self.weather.hourly_summary(hour * 3600)
@@ -261,11 +292,13 @@ class ImageComposer7:
         context.set_source(lg3)
         context.set_line_width(3)
         context.stroke()
+
         # Draw hours and daylight/UV bar
         bar_top = top + height + 13
         for hour in range(hours + 1):
             conditions = self.weather.hourly_summary(hour * 3600)
             x = hour_to_x(hour)
+
             # Hour label
             if hour % 3 == 0 and hour < hours:
                 self.draw_text(
@@ -276,14 +309,13 @@ class ImageComposer7:
                     align="center",
                     valign="bottom",
                 )
+
             # Conditions bar
             if hour < hours:
                 color = BLACK
                 if conditions["uv"]:
-                    print(conditions["uv"])
                     color = ORANGE
                 if conditions["uv"] > 7:
-                    print(conditions["uv"])
                     color = RED
                 context.rectangle(x, bar_top, (graph_width / hours) + 1, 8)
                 context.set_source_rgb(*color)
@@ -313,6 +345,16 @@ class ImageComposer7:
             self.draw_text(
                 context,
                 text=f"{round(conditions['temperature'])}°",
+                position=(left + 50, top + 150),
+                color=BLACK,
+                size=28,
+                align="center",
+            )
+        
+        if "temperature_range" in conditions:
+            self.draw_text(
+                context,
+                text=f"{round(conditions['temperature_range'][0])}° - {round(conditions['temperature_range'][1])}°",
                 position=(left + 50, top + 150),
                 color=BLACK,
                 size=28,
