@@ -51,6 +51,11 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
+      - name: Set up Python version
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.9'
+          
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
