@@ -1,14 +1,12 @@
-import datetime
-import math
 import os
+import pytz
+import math
+import cairo
+import datetime
 from io import BytesIO
+from weather import WeatherClient
 from typing import List, Tuple, Union
 
-import pytz
-import cairo
-
-from weather import WeatherClient
-from holidays import holidays
 
 BLACK = (0, 0, 0)
 WHITE = (1, 1, 1)
@@ -23,7 +21,7 @@ fonts = {}
 icons = {}
 
 
-class ImageComposer7:
+class ImageComposer:
     def __init__(self, api_key, lat, long, timezone):
         self.api_key = api_key
         self.lat = lat
@@ -54,7 +52,6 @@ class ImageComposer7:
             self.draw_column(context, self.weather.daily_summary(1), 120, 530)
             self.draw_column(context, self.weather.daily_summary(2), 120, 655)
             self.draw_meteogram(context)
-            # self.draw_alerts(context)
             self.draw_stats(context)
             # Save out as bytestream
             output = BytesIO()
@@ -239,7 +236,6 @@ class ImageComposer7:
             )
 
         left_cursor += 40
-
         if len(snow_points) > 0:
             left_cursor += self.draw_circle(context, left_cursor, top + 150, 6)
             context.set_source_rgb(*PURPLE)
@@ -366,62 +362,6 @@ class ImageComposer7:
         context.line_to(x, y2)
         context.stroke()
 
-    def draw_alerts(self, context: cairo.Context):
-        # Load weather alerts
-        alerts = self.weather.active_alerts()
-        for alert in alerts:
-            alert["color"] = RED
-        # Add holidays
-        for holiday_date, holiday_name in holidays.items():
-            days_until = (holiday_date - datetime.date.today()).days
-            if 0 <= days_until <= 14:
-                alerts.append(
-                    {
-                        "text": holiday_name,
-                        "subtext": (
-                            "om %i dage" % days_until if days_until != 1 else "i morgen"
-                        ),
-                        "color": BLUE,
-                    }
-                )
-        # Add no alert pill if there weren't any
-        if not alerts:
-            alerts = [{"text": "Ingen advarsler", "color": BLACK}]
-        top = 265
-        left = 5
-        for alert in alerts:
-            text = alert["text"].upper()
-            text_width = self.draw_text(
-                context,
-                text,
-                position=(0, 0),
-                size=20,
-                weight="bold",
-                noop=True,
-            )
-            self.draw_roundrect(context, left, top, text_width + 15, 30, 4)
-            context.set_source_rgb(*alert["color"])
-            context.fill()
-            left += self.draw_text(
-                context,
-                text,
-                position=(left + 8, top + 23),
-                size=20,
-                color=WHITE,
-                weight="bold",
-            )
-            if alert.get("subtext"):
-                subtext_width = self.draw_text(
-                    context,
-                    alert["subtext"],
-                    position=(left + 20, top + 26),
-                    size=15,
-                    color=BLACK,
-                )
-            else:
-                subtext_width = 0
-            left += 30 + subtext_width
-
     def draw_stats(self, context: cairo.Context):
         # Draw sunrise, sunset, AQI icon and values
         self.draw_icon(context, "rise-set-aqi", (650, 300))
@@ -535,7 +475,7 @@ class ImageComposer7:
 
     def draw_icon(self, context: cairo.Context, icon: str, position: Tuple[int, int], scaleFactor: float = 1):
         image = cairo.ImageSurface.create_from_png(
-            os.path.join(os.path.dirname(__file__), "icons-7", f"{icon}.png")
+            os.path.join(os.path.dirname(__file__), "icons", f"{icon}.png")
         )
         context.save()
         context.translate(*position)

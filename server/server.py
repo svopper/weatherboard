@@ -1,6 +1,6 @@
 import locale
 from io import BytesIO
-from composer_7 import ImageComposer7
+from composer import ImageComposer
 from flask import Flask, send_file, request, jsonify
 
 app = Flask(__name__)
@@ -15,7 +15,7 @@ def index():
         return jsonify({"error": "no_api_key"}), 400
 
     # Render
-    composer = ImageComposer7(
+    composer = ImageComposer(
         api_key,
         lat=request.args.get("latitude", "39.75"),
         long=request.args.get("longitude", "-104.90"),
