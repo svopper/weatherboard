@@ -1,4 +1,5 @@
 import locale
+import logging
 from io import BytesIO
 from composer import ImageComposer
 from flask import Flask, send_file, request, jsonify
@@ -22,6 +23,7 @@ def index():
         timezone=request.args.get("timezone", "Europe/Copenhagen"),
     )
     output = composer.render()
+    logging.log(2, "Created image for %s" % request.remote_addr)
     # Send to client
     output.seek(0)
     return send_file(output, mimetype="image/png")

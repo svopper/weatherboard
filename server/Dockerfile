@@ -1,16 +1,25 @@
-FROM python:3.9-alpine
+FROM python:3.9-slim
 
 # Copy and install requirements
-RUN apk update && apk add \
+RUN apt-get update && apt-get -y install \
     gcc \
     g++ \
-    freetype-dev \
+    libfreetype6-dev \
     musl-dev \
-    jpeg-dev \
-    zlib-dev \
-    libjpeg \
+    libjpeg-dev \
+    zlib1g-dev \
+    # libjpeg-dev \
     python3-dev \
-    cairo-dev
+    fontconfig \
+    libcairo2-dev \
+    locales
+
+# Set the locale
+RUN sed -i '/da_DK.UTF-8/s/^# //g' /etc/locale.gen && \
+    locale-gen
+ENV LANG da_DK.UTF-8  
+ENV LANGUAGE da_DK:da  
+ENV LC_ALL da_DK.UTF-8  
 
 # Codebase setup
 RUN mkdir /srv/weatherboard/
@@ -22,7 +31,7 @@ ENV PYTHONPATH /srv/weatherboard/server/
 ADD . /srv/weatherboard/
 
 # Add fonts
-RUN mkdir /usr/share/fonts && cp /srv/weatherboard/fonts/Roboto* /usr/share/fonts && fc-cache
+RUN mkdir -p /usr/share/fonts && cp /srv/weatherboard/fonts/Roboto* /usr/share/fonts && fc-cache
 
 # Runtime
 EXPOSE 80
