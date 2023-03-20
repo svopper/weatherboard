@@ -8,7 +8,6 @@ RUN apt-get update && apt-get -y install \
     musl-dev \
     libjpeg-dev \
     zlib1g-dev \
-    # libjpeg-dev \
     python3-dev \
     fontconfig \
     libcairo2-dev \

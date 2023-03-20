@@ -40,7 +40,8 @@ jobs:
         with:
           name: python-app
           path: |
-            ./server/* 
+            ./server/*
+            !venv/
             
 
   deploy:
@@ -50,15 +51,10 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
-    steps:
-      - name: Set up Python version
-        uses: actions/setup-python@v1
-        with:
-          python-version: '3.9'
-      
-      - name: Create and start virtual environment
-        run: |
-          sudo apt-get install -y pkg-config libcairo2-dev
+    steps:      
+      # - name: Create and start virtual environment
+      #   run: |
+      #     sudo apt-get install -y pkg-config libcairo2-dev gcc g++ libfreetype6-dev musl-dev libjpeg-dev zlib1g-dev python3-dev fontconfig libcairo2-dev locales
 
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
