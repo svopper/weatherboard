@@ -30,7 +30,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           source: "display/"
           strip_components: 1
-          target: "/apps/weatherboard"
+          target: "/home/${{ secrets.SSH_USERNAME }}/apps/weatherboard"
 
       # - name: Set up Docker Buildx
       #   uses: docker/setup-buildx-action@v1
