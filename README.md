@@ -1,5 +1,6 @@
 # Weatherboard
 
+[![Trigger auto deployment for API](https://github.com/svopper/weatherboard/actions/workflows/weatherboard-api-ca-AutoDeployTrigger.yml/badge.svg)](https://github.com/svopper/weatherboard/actions/workflows/weatherboard-api-ca-AutoDeployTrigger.yml)
 
 - `display` contains a basic Python script that renders an image onto the e-paper from a URL or local file. This is only for the 3-colour Waveshare display - for the 7-colour Pimoroni display I just use their prebuilt example with wget: https://github.com/pimoroni/inky/blob/master/examples/7color/image.py
 
