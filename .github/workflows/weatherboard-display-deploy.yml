@@ -9,7 +9,7 @@ on:
     paths:
     - 'display/**'
     - '.github/workflows/weatherboard-display-deploy.yml'
-
+    - '!display/*.md'
 
   # Allow mannually trigger 
   workflow_dispatch:      
@@ -32,30 +32,3 @@ jobs:
           source: "display/"
           strip_components: 1
           target: "/home/${{ secrets.SSH_USERNAME }}/apps/weatherboard"
-
-      - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@v0.1.8
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.PORT }}
-        script: whoami
-
-      # - name: Set up Docker Buildx
-      #   uses: docker/setup-buildx-action@v1
-
-      # - name: Log in to container registry
-      #   uses: docker/login-action@v1
-      #   with:
-      #     registry: docker.io
-      #     username: ${{ secrets.WEATHERBOARDAPICA_REGISTRY_USERNAME }}
-      #     password: ${{ secrets.WEATHERBOARDAPICA_REGISTRY_PASSWORD }}
-
-      # - name: Build and push container image to registry
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     push: true
-      #     tags: svopper/weatherboard-api-ca:${{ github.sha }}
-      #     file: server/Dockerfile
-      #     context: server/
