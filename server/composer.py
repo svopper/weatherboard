@@ -65,7 +65,7 @@ class ImageComposer:
         left: int = 5
         self.draw_text(
             context,
-            text=now.strftime("%A").title(),
+            text=now.strftime("%A").title()+"2",
             position=(left, 55),
             size=60,
             weight="light",
