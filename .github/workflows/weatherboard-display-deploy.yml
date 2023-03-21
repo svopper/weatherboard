@@ -9,7 +9,6 @@ on:
     paths:
     - 'display/**'
     - '.github/workflows/weatherboard-display-deploy.yml'
-    - '!display/*.md'
 
 
   # Allow mannually trigger 
