@@ -8,7 +8,7 @@ on:
       [ master ]
     paths:
     - 'server/**'
-    - '.github/workflows/weatherboard-api-ca-AutoDeployTrigger-8c7d7903-410b-4bc8-a86f-65d3d5b21a52.yml'
+    - '.github/workflows/weatherboard-api-ca-AutoDeployTrigger.yml'
 
   # Allow mannually trigger 
   workflow_dispatch:      
@@ -52,7 +52,7 @@ jobs:
 
 
       - name: Deploy to containerapp
-        uses: azure/CLI@v1
+        uses: azure/CLI@v2
         with:
           inlineScript: |
             az config set extension.use_dynamic_install=yes_without_prompt
