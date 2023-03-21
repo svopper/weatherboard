@@ -1,4 +1,4 @@
-name: Trigger auto deployment for weatherboard-api-ca
+name: Deployment of display software
 
 # When this action will be executed
 on:
