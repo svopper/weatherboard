@@ -52,9 +52,9 @@ jobs:
 
 
       - name: Deploy to containerapp
-        uses: azure/CLI@v2
+        uses: azure/CLI@v1
         with:
           inlineScript: |
             az config set extension.use_dynamic_install=yes_without_prompt
             az containerapp registry set -n weatherboard-api-ca -g weatherforecast-rg --server docker.io --username  ${{ secrets.WEATHERBOARDAPICA_REGISTRY_USERNAME }} --password ${{ secrets.WEATHERBOARDAPICA_REGISTRY_PASSWORD }}
-            az containerapp update -n weatherboard-api-ca -g weatherforecast-rg --image svopper/weatherboard-api-ca:${{ github.sha }}
+            az containerapp update -n weatherboard-api-ca -g weatherforecast-rg --image svopper/weatherboard-api-ca:latest
