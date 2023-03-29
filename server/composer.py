@@ -242,7 +242,7 @@ class ImageComposer:
             )
             left_cursor += 40
 
-        if not has_snow:
+        if has_snow:
             left_cursor += self.draw_circle(context, left_cursor, top + 150, 6)
             context.set_source_rgb(*PURPLE)
             context.fill()
