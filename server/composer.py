@@ -80,6 +80,7 @@ class ImageComposer:
             weight="bold",
         )
 
+    # TODO make this nicer
     def draw_uvi(self, context: cairo.Content):
         left = 500
         max_uvi = self.weather.uvi_max_24hr()
@@ -105,7 +106,8 @@ class ImageComposer:
 
     def draw_temps(self, context: cairo.Context):
         # Draw on temperature ranges
-        temp_min, temp_max = self.weather.temp_range_today()
+        daily = self.weather.daily_summary(0)
+        temp_min, temp_max = daily["temperature_range"][0], daily["temperature_range"][1]
         # Draw background rects
         self.draw_roundrect(context, 535, 5, 85, 90, 5)
         context.set_source_rgb(*BLUE)
