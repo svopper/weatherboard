@@ -105,7 +105,7 @@ class ImageComposer:
 
     def draw_temps(self, context: cairo.Context):
         # Draw on temperature ranges
-        temp_min, temp_max = self.weather.temp_range_24hr()
+        temp_min, temp_max = self.weather.temp_range_today()
         # Draw background rects
         self.draw_roundrect(context, 535, 5, 85, 90, 5)
         context.set_source_rgb(*BLUE)

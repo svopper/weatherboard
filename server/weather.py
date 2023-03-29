@@ -31,6 +31,17 @@ class WeatherClient:
         ]
         return min(temps), max(temps)
 
+    def temp_range_today(self):
+        temps = [
+            hour["temp"]
+            for hour in self.data["hourly"]
+            if hour["dt"] - self.current_time < 86400
+            and datetime.utcfromtimestamp(hour["dt"]).replace(tzinfo=pytz.utc).astimezone(
+                self.timezone
+            ).strftime("%H") == "00"
+        ]
+        return min(temps), max(temps)
+
     def uvi_max_24hr(self):
         return max(
             hour["uvi"]
