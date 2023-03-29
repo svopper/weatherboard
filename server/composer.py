@@ -210,9 +210,15 @@ class ImageComposer:
         precip_to_y = lambda rain: top + 1 + (max(4 - rain, 0) * (height / 4))
         rain_points = []
         snow_points = []
+        has_rain = False
+        has_snow = False
         for hour in range(hours + 1):
             conditions = self.weather.hourly_summary(hour * 3600)
+            if conditions["rain"] > 0:
+                has_rain = True
             rain_points.append((hour_to_x(hour), precip_to_y(conditions["rain"])))
+            if conditions["snow"] > 0:
+                has_snow = True
             snow_points.append((hour_to_x(hour), precip_to_y(conditions["snow"])))
         self.draw_precip_curve(
             context, points=rain_points, bottom=int(precip_to_y(0)), color=BLUE
@@ -221,9 +227,9 @@ class ImageComposer:
             context, points=snow_points, bottom=int(precip_to_y(0)), color=PURPLE
         )
 
-        # Add agenda below the chart if there is rain or snow. Agenda is colored dots with text on the right
+        # Agenda below the chart if there is rain or snow. Agenda is colored dots with text on the right
         left_cursor = left + left_axis
-        if len(rain_points) > 0:
+        if has_rain:
             left_cursor += self.draw_circle(context, left_cursor, top + 150, 6)
             context.set_source_rgb(*BLUE)
             context.fill()
@@ -234,9 +240,9 @@ class ImageComposer:
                 color=BLACK,
                 size=20,
             )
+            left_cursor += 40
 
-        left_cursor += 40
-        if len(snow_points) > 0:
+        if not has_snow:
             left_cursor += self.draw_circle(context, left_cursor, top + 150, 6)
             context.set_source_rgb(*PURPLE)
             context.fill()
