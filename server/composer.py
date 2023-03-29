@@ -315,8 +315,10 @@ class ImageComposer:
                 color = BLACK
                 if conditions["uv"]:
                     color = ORANGE
-                if conditions["uv"] > 7:
+                if conditions["uv"] >= 3:
                     color = RED
+                if conditions["uv"] >= 7:
+                    color = PURPLE
                 context.rectangle(x, bar_top, (graph_width / hours) + 1, 8)
                 context.set_source_rgb(*color)
                 context.fill()
