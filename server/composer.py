@@ -268,7 +268,7 @@ class ImageComposer:
             context.restore()
             self.draw_text(
                 context,
-                text=t,
+                text=f"{t}°",
                 position=(left + left_axis - 6, y),
                 size=14,
                 color=BLACK,
