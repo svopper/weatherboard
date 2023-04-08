@@ -11,10 +11,11 @@ from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 app = Flask(__name__)
 
 # Enable Application Insights
-instrumentation_key = os.environ.get("APPINSIGHTS_INSTRUMENTATIONKEY")
+instrumentation_key = f"InstrumentationKey={os.environ.get('APPINSIGHTS_INSTRUMENTATIONKEY')}"
+print(instrumentation_key)
 middleware = FlaskMiddleware(
     app,
-    exporter=AzureExporter(connection_string=f"InstrumentationKey={instrumentation_key}"),
+    exporter=AzureExporter(connection_string=instrumentation_key),
     sampler=ProbabilitySampler(rate=1.0),
 )
 
