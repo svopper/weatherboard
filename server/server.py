@@ -39,3 +39,7 @@ def index():
     # Send to client
     output.seek(0)
     return send_file(output, mimetype="image/png")
+
+@app.route("/health")
+def health():
+    return "OK"
