@@ -23,11 +23,11 @@ ENV LC_ALL da_DK.UTF-8
 # Codebase setup
 RUN mkdir /srv/weatherboard/
 WORKDIR /srv/weatherboard/
-RUN pip3 install requests pillow flask gunicorn pytz pycairo
 
 # Add code
 ENV PYTHONPATH /srv/weatherboard/server/
 ADD . /srv/weatherboard/
+RUN pip install -r requirements.txt
 
 # Add fonts
 RUN mkdir -p /usr/share/fonts && cp /srv/weatherboard/fonts/Roboto* /usr/share/fonts && fc-cache
