@@ -68,11 +68,11 @@ class ImageComposer:
         self.draw_text(
             context,
             text=city,
-            position=(790, 470),
-            align="right",
+            position=(5, 125),
+            align="left",
             size=30,
             color=BLACK,
-            # weight="bold",
+            weight="light",
         )
 
     def draw_date(self, context: cairo.Context):
@@ -94,19 +94,6 @@ class ImageComposer:
             size=30,
             color=BLACK,
             weight="bold",
-        )
-
-        location_service = LocationService(os.environ.get('MAPS_API_KEY'))
-        
-        city = location_service.get_city(self.lat, self.long)
-        self.draw_text(
-            context,
-            text=city,
-            position=(5, 125),
-            align="left",
-            size=30,
-            color=BLACK,
-            # weight="bold",
         )
 
     # TODO make this nicer
