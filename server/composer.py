@@ -5,6 +5,7 @@ import cairo
 import datetime
 from io import BytesIO
 from weather import WeatherClient
+from locationService import LocationService
 from typing import List, Tuple, Union
 
 
@@ -42,15 +43,16 @@ class ImageComposer:
             context.fill()
             # Draw features
             self.draw_date(context)
+            self.draw_city(context)
             self.draw_uvi(context)
             self.draw_temps(context)
-            self.draw_column(context, self.weather.hourly_summary(0), 120, 30)
-            self.draw_column(context, self.weather.hourly_summary(3 * 3600), 120, 155)
-            self.draw_column(context, self.weather.hourly_summary(6 * 3600), 120, 280)
-            self.draw_column(context, self.weather.hourly_summary(9 * 3600), 120, 405)
-            self.draw_vertical_bar(context, 520, 120, 250)
-            self.draw_column(context, self.weather.daily_summary(1), 120, 530)
-            self.draw_column(context, self.weather.daily_summary(2), 120, 655)
+            self.draw_column(context, self.weather.hourly_summary(0), 135, 30)
+            self.draw_column(context, self.weather.hourly_summary(3 * 3600), 135, 155)
+            self.draw_column(context, self.weather.hourly_summary(6 * 3600), 135, 280)
+            self.draw_column(context, self.weather.hourly_summary(9 * 3600), 135, 405)
+            self.draw_vertical_bar(context, 520, 135, 250)
+            self.draw_column(context, self.weather.daily_summary(1), 135, 530)
+            self.draw_column(context, self.weather.daily_summary(2), 135, 655)
             self.draw_meteogram(context)
             self.draw_stats(context)
             # Save out as bytestream
@@ -58,6 +60,20 @@ class ImageComposer:
             surface.write_to_png(output)
             return output
 
+    
+    def draw_city(self, context: cairo.Context):
+        location_service = LocationService(os.environ.get('MAPS_API_KEY'))
+        
+        city = location_service.get_city(self.lat, self.long)
+        self.draw_text(
+            context,
+            text=city,
+            position=(790, 470),
+            align="right",
+            size=30,
+            color=BLACK,
+            # weight="bold",
+        )
 
     def draw_date(self, context: cairo.Context):
         now = datetime.datetime.now(self.timezone)
@@ -78,6 +94,19 @@ class ImageComposer:
             size=30,
             color=BLACK,
             weight="bold",
+        )
+
+        location_service = LocationService(os.environ.get('MAPS_API_KEY'))
+        
+        city = location_service.get_city(self.lat, self.long)
+        self.draw_text(
+            context,
+            text=city,
+            position=(5, 125),
+            align="left",
+            size=30,
+            color=BLACK,
+            # weight="bold",
         )
 
     # TODO make this nicer
