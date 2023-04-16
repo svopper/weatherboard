@@ -100,21 +100,22 @@ class ImageComposer:
     def draw_uvi(self, context: cairo.Content):
         left = 500
         max_uvi = self.weather.uvi_max_24hr()
+        self.draw_icon(context, "uv", (300, 5), 0.7)
 
         self.draw_text(
             context,
             position=(left, 35),
-            text=f"UV max: {round(max_uvi * 10) / 10}",
+            text=f"max: {round(max_uvi * 10) / 10}",
             color=BLACK,
             size=30,
             align="right"
         )
 
-        current_uvi = self.weather.uvi_now()
+        current_uvi = self.weather.uvi_current()
         self.draw_text(
             context,
             position=(left, 65),
-            text=f"UV nu: {round(current_uvi * 10) / 10}",
+            text=f"nu: {round(current_uvi * 10) / 10}",
             color=BLACK,
             size=30,
             align="right"
@@ -225,7 +226,7 @@ class ImageComposer:
         )
 
         # Draw rain/snow curves
-        precip_to_y = lambda rain: top + 1 + (max(4 - rain, 0) * (height / 4))
+        precip_to_y = lambda precip: top + 1 + (max(4 - precip, 0) * (height / 4))
         rain_points = []
         snow_points = []
         has_rain = False
@@ -390,7 +391,7 @@ class ImageComposer:
 
     def draw_stats(self, context: cairo.Context):
         # Draw sunrise, sunset, AQI icon and values
-        self.draw_icon(context, "rise-set-aqi", (650, 300))
+        self.draw_icon(context, "rise-set", (650, 300))
         self.draw_text(
             context,
             position=(705, 337),
@@ -405,15 +406,14 @@ class ImageComposer:
             color=BLACK,
             size=32,
         )
-        # Pick AQI text and color
-        # aqi = self.weather.aqi()
-        color = GREY
-        text_width = self.draw_text(context, "N/A", size=30, weight="bold", noop=True)
-        self.draw_roundrect(context, 705, 402, text_width + 13, 36, 3)
-        context.set_source_rgb(*color)
-        context.fill()
+        # Draw current pressue
+        self.draw_icon(context, "pressure", (657, 402))
         self.draw_text(
-            context, position=(710, 430), text="N/A", color=WHITE, size=30, weight="bold"
+            context, 
+            position=(705, 430), 
+            text=self.weather.pressure_current(),
+            color=BLACK, 
+            size=32
         )
 
     def draw_roundrect(self, context, x, y, width, height, r):

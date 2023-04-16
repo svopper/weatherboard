@@ -30,8 +30,11 @@ class WeatherClient:
             if hour["dt"] - self.current_time < 86400
         )
 
-    def uvi_now(self):
+    def uvi_current(self):
         return self.data["current"]["uvi"]
+
+    def pressure_current(self):
+        return self.data["current"]["pressure"]
 
     def humidity_current(self):
         return self.data["current"]["humidity"]

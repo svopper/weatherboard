@@ -2,7 +2,7 @@
 
 ## Setup
 
-To use Azure Application Insights, set env var APPINSIGHTS_INSTRUMENTATIONKEY to your instrumentation key.
+To use Azure Application Insights, set env var APPINSIGHTS_INSTRUMENTATIONKEY and MAPS_API_KEY to your instrumentation key.
 Update container app env vars: `az containerapp update -n <app-name> -g <resource-group> --set-env-vars KEY=value`
 
 ### Prepare
@@ -25,11 +25,11 @@ FLASK_APP=server:app flask run --reload
 
 ## TODO
 
-- [ ] Figure out something for AQI replacement
-- [ ] Create Python wrapper application for screen to enable use of buttons and generally more control
-  - [ ] Program each button to change location
-- [ ] Use Google Maps API to determine city based on lat and lon
-  - [ ] Add city name to image
-- [ ] Implement health endpoint
+- [x] Figure out something for AQI replacement
+- [x] Create Python wrapper application for screen to enable use of buttons and generally more control
+  - [x] Program each button to change location
+- [x] Use Google Maps API to determine city based on lat and lon
+  - [x] Add city name to image
+- [x] Implement health endpoint
   - [ ] Google Maps API health
   - [ ] Open Weather API health

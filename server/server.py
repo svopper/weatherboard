@@ -12,6 +12,7 @@ app = Flask(__name__)
 
 # Enable Application Insights
 instrumentation_key = f"InstrumentationKey={os.environ.get('APPINSIGHTS_INSTRUMENTATIONKEY')}"
+print(instrumentation_key)
 middleware = FlaskMiddleware(
     app,
     exporter=AzureExporter(connection_string=instrumentation_key),
