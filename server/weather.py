@@ -38,6 +38,9 @@ class WeatherClient:
 
     def humidity_current(self):
         return self.data["current"]["humidity"]
+    
+    def wind_speed_current(self):
+        return self.data["current"]["wind_speed"]
 
     def sunrise(self):
         return datetime.utcfromtimestamp(self.data["current"]["sunrise"]).replace(
@@ -69,6 +72,7 @@ class WeatherClient:
             "description": data["weather"][0]["main"].title(),
             "temperature": data["temp"],
             "wind": data["wind_speed"], # in m/s
+            "wind-icon": self.wind_deg_to_icon(data["wind_deg"]),
             "rain": data.get("rain", {}).get("1h", 0),
             "snow": data.get("snow", {}).get("1h", 0),
             "clouds": data["clouds"],
@@ -102,6 +106,24 @@ class WeatherClient:
             )
         return result
 
+    def wind_deg_to_icon(self, deg):
+        if deg < 22.5 or deg >= 337.5:
+            return "arrow-down"
+        elif deg < 67.5:
+            return "arrow-down-left"
+        elif deg < 112.5:
+            return "arrow-left"
+        elif deg < 157.5:
+            return "arrow-up-left"
+        elif deg < 202.5:
+            return "arrow-up"
+        elif deg < 247.5:
+            return "arrow-up-right"
+        elif deg < 292.5:
+            return "arrow-right"
+        else:
+            return "arrow-down-right"
+
     # https://openweathermap.org/weather-conditions
     def code_to_icon(self, code, night=False):
         if code == 511:
@@ -124,9 +146,7 @@ class WeatherClient:
             return "fog"
         elif code == 800:
             return "clear-night" if night else "clear-day"
-        elif code == 801:
+        elif 801 <= code < 804:
             return "clouds-few-night" if night else "clouds-few-day"
-        elif code == 802:
-            return "clouds-scattered"
         else:
-            return "clouds-broken"
+            return "clouds-scattered"

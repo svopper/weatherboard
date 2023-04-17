@@ -4,20 +4,8 @@ import logging
 from io import BytesIO
 from composer import ImageComposer
 from flask import Flask, send_file, request, jsonify
-from opencensus.trace.samplers import ProbabilitySampler
-from opencensus.ext.azure.trace_exporter import AzureExporter
-from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 
 app = Flask(__name__)
-
-# Enable Application Insights
-instrumentation_key = f"InstrumentationKey={os.environ.get('APPINSIGHTS_INSTRUMENTATIONKEY')}"
-print(instrumentation_key)
-middleware = FlaskMiddleware(
-    app,
-    exporter=AzureExporter(connection_string=instrumentation_key),
-    sampler=ProbabilitySampler(rate=1.0),
-)
 
 locale.setlocale(locale.LC_ALL, 'da_DK.UTF-8')
 

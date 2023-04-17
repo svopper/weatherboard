@@ -50,7 +50,7 @@ class ImageComposer:
             self.draw_column(context, self.weather.hourly_summary(3 * 3600), 135, 155)
             self.draw_column(context, self.weather.hourly_summary(6 * 3600), 135, 280)
             self.draw_column(context, self.weather.hourly_summary(9 * 3600), 135, 405)
-            self.draw_vertical_bar(context, 520, 135, 250)
+            # self.draw_vertical_bar(context, 520, 135, 250)
             self.draw_column(context, self.weather.daily_summary(1), 135, 530)
             self.draw_column(context, self.weather.daily_summary(2), 135, 655)
             self.draw_meteogram(context)
@@ -366,11 +366,23 @@ class ImageComposer:
             self.draw_text(
                 context,
                 text=f"{round(conditions['temperature'])}°",
-                position=(left + 50, top + 150),
+                position=(left + 30, top + 150),
                 color=BLACK,
                 size=28,
-                align="center",
+                align="right",
             )
+
+        if "wind" in conditions and "wind-icon" in conditions:
+            self.draw_icon(context, conditions["wind-icon"], (left + 40, top + 125), scaleFactor=0.5)
+            self.draw_text(
+                context,
+                text=f"{round(conditions['wind'])}",
+                position=(left + 70, top + 150),
+                color=BLACK,
+                size=28,
+                align="left",
+            )
+
         
         if "temperature_range" in conditions:
             self.draw_text(
