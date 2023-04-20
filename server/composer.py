@@ -47,10 +47,10 @@ class ImageComposer:
             self.draw_uvi(context)
             self.draw_temps(context)
             self.draw_column(context, self.weather.hourly_summary(0), 135, 30)
-            self.draw_column(context, self.weather.hourly_summary(3 * 3600), 135, 155)
-            self.draw_column(context, self.weather.hourly_summary(6 * 3600), 135, 280)
-            self.draw_column(context, self.weather.hourly_summary(9 * 3600), 135, 405)
-            # self.draw_vertical_bar(context, 520, 135, 250)
+            self.draw_column(context, self.weather.hourly_summary(2 * 3600), 135, 155)
+            self.draw_column(context, self.weather.hourly_summary(4 * 3600), 135, 280)
+            self.draw_column(context, self.weather.hourly_summary(6 * 3600), 135, 405)
+            self.draw_vertical_bar(context, 520, 135, 250)
             self.draw_column(context, self.weather.daily_summary(1), 135, 530)
             self.draw_column(context, self.weather.daily_summary(2), 135, 655)
             self.draw_meteogram(context)
@@ -319,7 +319,7 @@ class ImageComposer:
             x = hour_to_x(hour)
 
             # Hour label
-            if hour % 3 == 0 and hour < hours:
+            if hour % 2 == 0 and hour < hours:
                 self.draw_text(
                     context,
                     text=conditions["hour"],
