@@ -4,9 +4,10 @@ import math
 import cairo
 import datetime
 from io import BytesIO
+from strava import StravaService
 from weather import WeatherClient
-from locationService import LocationService
 from typing import List, Tuple, Union
+from locationService import LocationService
 
 
 BLACK = (0, 0, 0)
@@ -50,7 +51,7 @@ class ImageComposer:
             self.draw_column(context, self.weather.hourly_summary(2 * 3600), 135, 155)
             self.draw_column(context, self.weather.hourly_summary(4 * 3600), 135, 280)
             self.draw_column(context, self.weather.hourly_summary(6 * 3600), 135, 405)
-            self.draw_vertical_bar(context, 520, 135, 250)
+            self.draw_vertical_bar(context, 515, 135, 290)
             self.draw_column(context, self.weather.daily_summary(1), 135, 530)
             self.draw_column(context, self.weather.daily_summary(2), 135, 655)
             self.draw_meteogram(context)
@@ -418,14 +419,30 @@ class ImageComposer:
             color=BLACK,
             size=32,
         )
-        # Draw current pressue
-        self.draw_icon(context, "pressure", (657, 402))
+
+        # Draw ride stats
+        self.draw_icon(context, "bike", (657, 402), scaleFactor=0.5)
+        strava = StravaService(os.environ.get('STRAVA_API_KEY'), os.environ.get('STRAVA_RIDER_ID'))
+        distance = strava.get_ride_ytd()
+        distnace_in_kilometers = distance / 1000
+        left = self.draw_text(
+            context,
+            text=f"{round(distnace_in_kilometers)}",
+            position=(705, 430),
+            align="left",
+            size=30,
+            color=BLACK,
+            weight="bold"
+        )
+
         self.draw_text(
-            context, 
-            position=(705, 430), 
-            text=self.weather.pressure_current(),
-            color=BLACK, 
-            size=32
+            context,
+            text=f"km/ytd",
+            position=(705, 450),
+            align="left",
+            size=20,
+            color=BLACK,
+            weight="light"
         )
 
     def draw_roundrect(self, context, x, y, width, height, r):
