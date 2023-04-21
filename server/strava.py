@@ -9,8 +9,9 @@ class StravaService:
         
         if response.status_code != 200:
             logging.warning("something went wrong with strava api")
+            logging.info(response.json())
             return -1
-        logging.warning("strava api call successful")
+        logging.info("strava api call successful")
         return response.json()['ytd_ride_totals']['distance']
 
     def acquire_access_token(self):
@@ -26,6 +27,7 @@ class StravaService:
         response = requests.post(auth_url, data=payload)
         if response.status_code != 200:
             logging.warning("something went wrong with strava api")
+            logging.info(response.json())
             return -1
-        logging.warning("strava api call successful")
+        logging.info("strava api call successful")
         return response.json()['access_token']
