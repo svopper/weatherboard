@@ -422,7 +422,7 @@ class ImageComposer:
 
         # Draw ride stats
         self.draw_icon(context, "bike", (657, 402), scaleFactor=0.5)
-        strava = StravaService(os.environ.get('STRAVA_API_KEY'), os.environ.get('STRAVA_RIDER_ID'))
+        strava = StravaService()
         distance = strava.get_ride_ytd()
         distnace_in_kilometers = distance / 1000
         left = self.draw_text(
