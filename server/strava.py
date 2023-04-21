@@ -1,5 +1,6 @@
 import os
 import requests
+import logging
 
 class StravaService:    
     def get_ride_ytd(self):
@@ -7,8 +8,9 @@ class StravaService:
         response = requests.get(url, headers = { "Authorization": f'Bearer {self.acquire_access_token()}'})
         
         if response.status_code != 200:
-            print("something went wrong with strava api")
+            logging.warning("something went wrong with strava api")
             return -1
+        logging.warning("strava api call successful")
         return response.json()['ytd_ride_totals']['distance']
 
     def acquire_access_token(self):
@@ -23,7 +25,7 @@ class StravaService:
 
         response = requests.post(auth_url, data=payload)
         if response.status_code != 200:
-            print("something went wrong with strava api")
+            logging.warning("something went wrong with strava api")
             return -1
-            
+        logging.warning("strava api call successful")
         return response.json()['access_token']
