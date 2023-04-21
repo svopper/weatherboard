@@ -8,5 +8,7 @@ class StravaService:
     
     def get_ride_ytd(self):
         url = f'https://www.strava.com/api/v3/athletes/{self.rider_id}/stats'
+        print(url)
         response = requests.get(url, headers = { "Authorization": f'Bearer {self.api_key}'}).json()
+        print(response)
         return response['ytd_ride_totals']['distance']
