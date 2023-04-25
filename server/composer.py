@@ -100,7 +100,7 @@ class ImageComposer:
     # TODO make this nicer
     def draw_uvi(self, context: cairo.Content):
         left = 500
-        max_uvi = self.weather.uvi_max_24hr()
+        max_uvi = self.weather.uvi_max_today()
         self.draw_icon(context, "uv", (300, 5), 0.7)
 
         self.draw_text(

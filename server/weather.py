@@ -23,12 +23,8 @@ class WeatherClient:
     def temp_current(self):
         return self.data["current"]["temp"]
 
-    def uvi_max_24hr(self):
-        return max(
-            hour["uvi"]
-            for hour in self.data["hourly"]
-            if hour["dt"] - self.current_time < 86400
-        )
+    def uvi_max_today(self):
+        return self.data["daily"][0]["uvi"]
 
     def uvi_current(self):
         return self.data["current"]["uvi"]
