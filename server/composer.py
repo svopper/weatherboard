@@ -371,6 +371,7 @@ class ImageComposer:
                 color=BLACK,
                 size=28,
                 align="right",
+                weight="bold"
             )
 
         if "wind" in conditions and "wind-icon" in conditions:
