@@ -421,28 +421,15 @@ class ImageComposer:
         )
 
         # Draw ride stats
-        self.draw_icon(context, "bike", (657, 402), scaleFactor=0.5)
-        strava = StravaService()
-        distance = strava.get_ride_ytd()
-        distnace_in_kilometers = distance / 1000
-        left = self.draw_text(
+        self.draw_icon(context, "ocean-temp", (657, 402), scaleFactor=0.5)
+        self.draw_text(
             context,
-            text=f"{round(distnace_in_kilometers)}",
+            text=f'{WeatherClient.ocean_temp(self)}°',
             position=(705, 430),
             align="left",
             size=30,
             color=BLACK,
             weight="bold"
-        )
-
-        self.draw_text(
-            context,
-            text=f"km/ytd",
-            position=(705, 450),
-            align="left",
-            size=20,
-            color=BLACK,
-            weight="light"
         )
 
     def draw_roundrect(self, context, x, y, width, height, r):

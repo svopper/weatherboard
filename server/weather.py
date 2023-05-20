@@ -98,6 +98,13 @@ class WeatherClient:
                 }
             )
         return result
+    
+    def ocean_temp(self):
+        ocean_observation = requests.get(
+            f"https://api.weather.kols.dk/oceanObs/30336"
+        ).json()
+
+        return ocean_observation["observation"]["maxTemp24H"]
 
     def wind_deg_to_icon(self, deg):
         if deg < 22.5 or deg >= 337.5:

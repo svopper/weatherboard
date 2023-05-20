@@ -1,7 +1,5 @@
-import os
 import locale
 import logging
-from io import BytesIO
 from composer import ImageComposer
 from flask import Flask, send_file, request, jsonify
 
@@ -19,8 +17,8 @@ def index():
     # Render
     composer = ImageComposer(
         api_key,
-        lat=request.args.get("latitude", "39.75"),
-        long=request.args.get("longitude", "-104.90"),
+        lat=request.args.get("latitude", "55.656404"),
+        long=request.args.get("longitude", "12.590530"),
         timezone=request.args.get("timezone", "Europe/Copenhagen"),
     )
     output = composer.render()

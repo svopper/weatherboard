@@ -25,7 +25,7 @@ class Location:
 
 # These correspond to buttons A, B, C and D respectively
 CITIES = [
-    Location("Copenhagen", 55.676098, 12.568337),
+    Location("Copenhagen", 55.656404, 12.590530),
     Location("Ålsgårde", 56.075008, 12.545572),
     Location("Karlslunde", 55.566929, 12.245408),
     Location("Aarhus", 56.162939, 10.203921)
