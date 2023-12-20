@@ -12,13 +12,16 @@ from locationService import LocationService
 
 BLACK = (0, 0, 0)
 WHITE = (1, 1, 1)
-GREEN = (0, 1, 0)
 BLUE = (0, 0, 1)
+LIGHT_BLUE = (0.5, 0.75, 1)
 RED = (1, 0, 0)
-YELLOW = (1, 1, 0)
 PURPLE = (0.5, 0, 1)
 ORANGE = (1, 0.55, 0)
 GREY = (0.4, 0.4, 0.4)
+
+RAIN_COLOR = BLUE
+SNOW_COLOR = LIGHT_BLUE
+
 fonts = {}
 icons = {}
 
@@ -241,17 +244,17 @@ class ImageComposer:
                 has_snow = True
             snow_points.append((hour_to_x(hour), precip_to_y(conditions["snow"])))
         self.draw_precip_curve(
-            context, points=rain_points, bottom=int(precip_to_y(0)), color=BLUE
+            context, points=rain_points, bottom=int(precip_to_y(0)), color=RAIN_COLOR
         )
         self.draw_precip_curve(
-            context, points=snow_points, bottom=int(precip_to_y(0)), color=PURPLE
+            context, points=snow_points, bottom=int(precip_to_y(0)), color=SNOW_COLOR
         )
 
         # Agenda below the chart if there is rain or snow. Agenda is colored dots with text on the right
         left_cursor = left + left_axis
         if has_rain:
             left_cursor += self.draw_circle(context, left_cursor, top + 150, 6)
-            context.set_source_rgb(*BLUE)
+            context.set_source_rgb(*RAIN_COLOR)
             context.fill()
             left_cursor += self.draw_text(
                 context,
@@ -264,7 +267,7 @@ class ImageComposer:
 
         if has_snow:
             left_cursor += self.draw_circle(context, left_cursor, top + 150, 6)
-            context.set_source_rgb(*PURPLE)
+            context.set_source_rgb(*SNOW_COLOR)
             context.fill()
             left_cursor += self.draw_text(
                 context,
