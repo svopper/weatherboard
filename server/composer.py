@@ -425,8 +425,7 @@ class ImageComposer:
         self.draw_icon(context, "ocean-temp", (657, 402), scaleFactor=0.5)
         self.draw_text(
             context,
-            # text=f'{WeatherClient.ocean_temp(self)}°',
-            text='N/A',
+            text=f'{WeatherClient.ocean_temp(self)}°',
             position=(705, 430),
             align="left",
             size=30,
