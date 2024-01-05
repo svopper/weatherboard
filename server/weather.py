@@ -4,9 +4,6 @@ import math
 import requests
 from datetime import datetime
 
-from requests.api import head
-
-
 class WeatherClient:
     def __init__(self, latitude, longitude, timezone=None):
         self.latitude = float(latitude)
