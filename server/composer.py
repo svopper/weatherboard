@@ -4,7 +4,6 @@ import math
 import cairo
 import datetime
 from io import BytesIO
-from strava import StravaService
 from weather import WeatherClient
 from typing import List, Tuple, Union
 from locationService import LocationService
@@ -292,7 +291,7 @@ class ImageComposer:
             self.draw_text(
                 context,
                 text=f"{t}°",
-                position=(left + left_axis - 6, y),
+                position=(left + left_axis - 2, y),
                 size=14,
                 color=BLACK,
                 align="right",
@@ -392,7 +391,7 @@ class ImageComposer:
         if "temperature_range" in conditions:
             self.draw_text(
                 context,
-                text=f"{round(conditions['temperature_range'][0])}° - {round(conditions['temperature_range'][1])}°",
+                text=f"{round(conditions['temperature_range'][0])}° • {round(conditions['temperature_range'][1])}°",
                 position=(left + 50, top + 150),
                 color=BLACK,
                 size=28,

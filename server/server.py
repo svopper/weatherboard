@@ -12,7 +12,7 @@ def index():
     # Get API key
     api_key = request.args.get("api_key")
     if not api_key:
-        return jsonify({"error": "no_api_key"}), 400
+        return jsonify({"error": "No query parameter named api_key present"}), 400
 
     # Render
     composer = ImageComposer(
@@ -22,7 +22,7 @@ def index():
         timezone=request.args.get("timezone", "Europe/Copenhagen"),
     )
     output = composer.render()
-    logging.log(2, "Created image for %s" % request.remote_addr)
+    logging.log(logging.INFO, "Created image for %s" % request.remote_addr)
     # Send to client
     output.seek(0)
     return send_file(output, mimetype="image/png")
