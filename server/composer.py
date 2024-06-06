@@ -108,7 +108,7 @@ class ImageComposer:
         self.draw_text(
             context,
             position=(left, 35),
-            text=f"max: {round(max_uvi * 10) / 10}",
+            text=f"Max: {round(max_uvi * 10) / 10}",
             color=BLACK,
             size=30,
             align="right"
@@ -118,7 +118,7 @@ class ImageComposer:
         self.draw_text(
             context,
             position=(left, 65),
-            text=f"nx: {round(current_uvi * 10) / 10}",
+            text=f"Nu: {round(current_uvi * 10) / 10}",
             color=BLACK,
             size=30,
             align="right"
