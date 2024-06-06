@@ -133,8 +133,10 @@ class WeatherClient:
             return "thunderstorm"
         elif 300 <= code < 400:
             return "showers"
-        elif 500 <= code < 505:
+        elif 501 <= code < 505:
             return "rain"
+        elif code == 500:
+            return "showers"
         elif 520 <= code < 600:
             return "showers"
         elif 611 <= code < 620:
