@@ -118,7 +118,7 @@ class ImageComposer:
         self.draw_text(
             context,
             position=(left, 65),
-            text=f"nu: {round(current_uvi * 10) / 10}",
+            text=f"nx: {round(current_uvi * 10) / 10}",
             color=BLACK,
             size=30,
             align="right"
