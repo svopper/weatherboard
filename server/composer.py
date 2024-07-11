@@ -108,7 +108,7 @@ class ImageComposer:
         self.draw_text(
             context,
             position=(left, 35),
-            text=f"Max: {round(max_uvi * 10) / 10}",
+            text=f"Max: {round(max_uvi)}",
             color=BLACK,
             size=30,
             align="right"
@@ -118,7 +118,7 @@ class ImageComposer:
         self.draw_text(
             context,
             position=(left, 65),
-            text=f"Nu: {round(current_uvi * 10) / 10}",
+            text=f"Nu: {round(current_uvi)}",
             color=BLACK,
             size=30,
             align="right"
@@ -325,7 +325,7 @@ class ImageComposer:
             if hour % 2 == 0 and hour < hours:
                 self.draw_text(
                     context,
-                    text=conditions["hour"],
+                    text=conditions["hour"]+":00",
                     position=(x, bar_top + 19),
                     size=15,
                     align="center",
