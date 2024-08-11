@@ -8,7 +8,6 @@ class LocationService:
     
     def get_city(self, lat, lon):
         url = f'https://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lon}&key={self.api_key}'
-        logging.error(url)
         response = requests.get(url).json()
         if response['status'] != 'OK':
             logging.error("Something went wrong with Google Maps API. Error: %s" % response['error_message'])

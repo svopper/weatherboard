@@ -30,9 +30,12 @@ class ImageComposer:
         self.api_key = api_key
         self.lat = lat
         self.long = long
-        self.timezone = pytz.timezone(timezone)
         self.width = 800
         self.height = 480
+
+        if timezone not in pytz.all_timezones:
+            raise ValueError("Invalid timezone")
+        self.timezone = pytz.timezone(timezone)
 
     def render(self):
         # Fetch weather

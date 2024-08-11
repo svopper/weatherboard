@@ -13,19 +13,22 @@ def index():
     api_key = request.args.get("api_key")
     if not api_key:
         return jsonify({"error": "No query parameter named api_key present"}), 400
-
-    # Render
-    composer = ImageComposer(
-        api_key,
-        lat=request.args.get("latitude", "55.656404"),
-        long=request.args.get("longitude", "12.590530"),
-        timezone=request.args.get("timezone", "Europe/Copenhagen"),
-    )
-    output = composer.render()
-    logging.log(logging.INFO, "Created image for %s" % request.remote_addr)
-    # Send to client
-    output.seek(0)
-    return send_file(output, mimetype="image/png")
+    try:
+        # Render
+        composer = ImageComposer(
+            api_key,
+            lat=request.args.get("latitude", "55.656404"),
+            long=request.args.get("longitude", "12.590530"),
+            timezone=request.args.get("timezone", "Europe/Copenhagen"),
+        )
+        output = composer.render()
+        logging.info("Created image for %s" % request.remote_addr)
+        # Send to client
+        output.seek(0)
+        return send_file(output, mimetype="image/png")
+    except Exception as e:
+        logging.error("Error creating image: %s" % str(e))
+        return jsonify({"error": str(e)}), 500
 
 @app.route("/health")
 def health():
