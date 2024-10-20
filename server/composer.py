@@ -426,7 +426,7 @@ class ImageComposer:
             size=32,
         )
 
-        # Draw ride stats
+        # Draw ocean stats
         self.draw_icon(context, "ocean-temp", (657, 402), scaleFactor=0.5)
         self.draw_text(
             context,

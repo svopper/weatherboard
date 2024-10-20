@@ -99,9 +99,10 @@ class WeatherClient:
     def ocean_temp(self):
         try:
             ocean_observation = requests.get(
-                f"https://api.weather.kols.dk/oceanObs/30363"
+                f"http://api.weather.kols.dk/oceanObs/30363"
             ).json()
-            return ocean_observation["observation"]["maxTemp24H"]
+            max_temp = ocean_observation["observation"]["maxTemp24H"]
+            return max_temp
         except:
             return 'N/A'
 
