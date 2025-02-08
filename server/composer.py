@@ -48,19 +48,19 @@ class ImageComposer:
             context.set_source_rgb(1, 1, 1)
             context.fill()
             # Draw features
-            self.draw_date(context)
-            self.draw_city(context)
-            self.draw_uvi(context)
-            self.draw_temps(context)
-            self.draw_column(context, self.weather.hourly_summary(0), 135, 30)
-            self.draw_column(context, self.weather.hourly_summary(2 * 3600), 135, 155)
-            self.draw_column(context, self.weather.hourly_summary(4 * 3600), 135, 280)
-            self.draw_column(context, self.weather.hourly_summary(6 * 3600), 135, 405)
-            self.draw_vertical_bar(context, 515, 135, 290)
-            self.draw_column(context, self.weather.daily_summary(1), 135, 530)
-            self.draw_column(context, self.weather.daily_summary(2), 135, 655)
-            self.draw_meteogram(context)
-            self.draw_stats(context)
+            self.draw_date(context)                                                     # Draw date
+            self.draw_city(context)                                                     # Draw city name
+            self.draw_uvi(context)                                                      # Draw UV index
+            self.draw_temps(context)                                                    # Draw temperature ranges
+            self.draw_column(context, self.weather.hourly_summary(0), 135, 30)          # Draw current conditions
+            self.draw_column(context, self.weather.hourly_summary(2 * 3600), 135, 155)  # Draw conditions in 2 hours
+            self.draw_column(context, self.weather.hourly_summary(4 * 3600), 135, 280)  # Draw conditions in 4 hours
+            self.draw_column(context, self.weather.hourly_summary(6 * 3600), 135, 405)  # Draw conditions in 6 hours
+            self.draw_vertical_bar(context, 515, 135, 290)                              # Draw vertical bar separating current conditions and forecast
+            self.draw_column(context, self.weather.daily_summary(1), 135, 530)          # Draw tomorrow's forecast
+            self.draw_column(context, self.weather.daily_summary(2), 135, 655)          # Draw day after tomorrow's forecast
+            self.draw_meteogram(context)                                                # Draw meteogram (the graph)
+            self.draw_stats(context)                                                    # Draw sunrise, sunset, ocean temperature
             # Save out as bytestream
             output = BytesIO()
             surface.write_to_png(output)

@@ -11,9 +11,8 @@ class WeatherClient:
         self.timezone = timezone
 
     def load(self, api_key):
-        self.data = requests.get(
-            f"https://api.openweathermap.org/data/3.0/onecall?lat={self.latitude}&lon={self.longitude}&exclude=minutely&units=metric&appid={api_key}"
-        ).json()
+        url = f"https://api.openweathermap.org/data/3.0/onecall?lat={self.latitude}&lon={self.longitude}&exclude=minutely&units=metric&appid={api_key}"
+        self.data = requests.get(url).json()
         self.current_time = self.data["current"]["dt"]
 
 
@@ -33,14 +32,10 @@ class WeatherClient:
         return self.data["current"]["wind_speed"]
 
     def sunrise(self):
-        return datetime.utcfromtimestamp(self.data["current"]["sunrise"]).replace(
-            tzinfo=pytz.utc
-        )
+        return datetime.fromtimestamp(self.data["current"]["sunrise"], pytz.utc)
 
     def sunset(self):
-        return datetime.utcfromtimestamp(self.data["current"]["sunset"]).replace(
-            tzinfo=pytz.utc
-        )
+        return datetime.fromtimestamp(self.data["current"]["sunset"], pytz.utc)
 
     def hourly_summary(self, time_offset):
         # Find the right hour
@@ -50,10 +45,11 @@ class WeatherClient:
                 break
         data = d1
         # Format a summary
-        dt = datetime.utcfromtimestamp(data["dt"]).replace(tzinfo=pytz.utc)
+        dt = datetime.fromtimestamp(data["dt"], pytz.utc)
         hour = dt.astimezone(self.timezone).strftime("%H")
         if hour == "":
             hour = "0"
+
         return {
             "time": dt,
             "hour": hour,
@@ -73,7 +69,7 @@ class WeatherClient:
         data = self.data["daily"][day_offset]
         # Format a summary
         return {
-            "date": datetime.utcfromtimestamp(data["dt"]).replace(tzinfo=pytz.utc),
+            "date": datetime.fromtimestamp(data["dt"], pytz.utc),
             "icon": self.code_to_icon(data["weather"][0]["id"]),
             "description": data["weather"][0]["main"].title(),
             "temperature_range": (data["temp"]["min"], data["temp"]["max"]),
