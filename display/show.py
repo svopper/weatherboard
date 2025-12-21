@@ -51,7 +51,7 @@ def download_image(url):
 
 def build_url(city):
     api_key = os.environ.get("OWA_API_KEY")
-    url = "https://weatherboard-api-ca.purplemoss-7aaf1984.westeurope.azurecontainerapps.io/?api_key={}&latitude={}&longitude={}&timezone=Europe/Copenhagen".format(api_key, city.latitude, city.longitude)
+    url = "https://weatherboardcomposer.kols.dk/?api_key={}&latitude={}&longitude={}&timezone=Europe/Copenhagen".format(api_key, city.latitude, city.longitude)
     return url
 
 # "handle_button" will be called every time a button is pressed
