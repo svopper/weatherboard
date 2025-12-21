@@ -2,8 +2,8 @@
 
 ## Setup
 
-To use Azure Application Insights, set env var APPINSIGHTS_INSTRUMENTATIONKEY and MAPS_API_KEY to your instrumentation key.
-Update container app env vars: `az containerapp update -n <app-name> -g <resource-group> --set-env-vars KEY=value`
+Set the following environment variables:
+- `MAPS_API_KEY` - Google Maps API key
 
 ### Prepare
 
@@ -22,7 +22,6 @@ Or use Docker: `docker build -t 'weatherboard-api' .`. Remember to set environme
 FLASK_APP=server:app flask run --reload
 ```
 
-
 ## TODO
 
 - [x] Figure out something for AQI replacement
@@ -33,3 +32,7 @@ FLASK_APP=server:app flask run --reload
 - [x] Implement health endpoint
   - [ ] Google Maps API health
   - [ ] Open Weather API health
+
+
+## Deployment
+Server is deployed automatically to Hetzner VPS using Dokploy on push to main branch.
